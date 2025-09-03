@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!-- line 1 represents a required declaration that tells the browser you're using HTML5 -->
+<html lang="en">
+
+<!--The <head> section hold metadata about the page-information that isn't displayed on the actual page but crucial for the browser -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- The <title> tag specifies the text that appears in the browser tab -->
+    <title>Trading Risk Calculator</title>
+
+    <!--Tailwind CSS CDN (Content Delivery Network) link that pulls in the Tailwind CSS framework-->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+
+</head>
+
+<!-- The <body> tag contains the content of the page that is displayed in the browser to the user-->
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-xl">
+        <h1 class="text-3xl font-bold text-gray-800 text-center mb-6">Risk Calculator</h1>
+        <p class="text-gray-600 text-center mb-8">
+            Enter your target points and the number of the contracts to calculate your risk per trade.
+        </p>
+        <div class="space-y-6">
+            <div>
+                <label for="points" class="block text-sm font-medium text-gray-700">Points per Trade</label>
+                <input type="number" id="points" placeholder="e.g., 12.5" class="mt-1 block w-full px-4 py-2 border border-gray-300 
+                rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+            </div>
+
+            <div>
+                <label for="contracts" class="block text-sm font-medium text-gray-700">Number of Contracts</label>
+                <input type="number" id="contracts" placeholder="e.g., 2" class="mt-1 block w-full px-4 py-2 border border-gray-300 
+                rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+            </div>
+
+            <div class="pt-4">
+                <button id="calculateBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm 
+                text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    Calculate Risk
+                </button>
+            </div>
+        </div>
+
+        <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg shadow-inner text-center">
+            <div id="riskResult" class="text-2xl font-semibold text-gray-800 hidden">
+                Your current risk is: <span id="riskValue" class="text-indigo-600 font-bold"></span>
+            </div>
+
+            <div id="contractsNeeded" class="mt-4 text-lg text-gray-700 hidden">
+                To risk exactly <span class="font-bold">$250</span>, you should use: <span id="contractsValue" class="text-green-600 font-bold"></span> contracts.
+            </div>
+        </div>
+
+        <div id="error-message" class="text-red-500 mt-4 hidden text-center">
+            Please enter valid numbers for both fields.
+        </div>
+    </div>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pointsInput = document.getElementById('points');
+            const contractsInput = document.getElementById('contracts');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const riskResultDiv = document.getElementById('riskResult');
+            const riskValueSpan = document.getElementById('riskValue');
+            const contractsNeededDiv = document.getElementById('contractsNeeded');
+            const contractsValueSpan = document.getElementById('contractsValue');
+            const errorMessageDiv = document.getElementById('error-message');
+
+            calculateBtn.addEventListener('click', () => {
+                const points = parseFloat(pointsInput.value);
+                const contracts = parseFloat(contractsInput.value);
+                const targetRisk = 250;
+
+                // Simple input validation
+                if (isNaN(points) || isNaN(contracts) || points <= 0 || contracts <= 0) {
+                    riskResultDiv.classList.add('hidden');
+                    contractsNeededDiv.classList.add('hidden');
+                    errorMessageDiv.classList.remove('hidden');
+                    return;
+                }
+
+                errorMessageDiv.classList.add('hidden');
+
+                // Perform the user's described calculation
+                // Let's assume the calculation is based on the logic described in the prompt
+                const x = points * 4;
+                const y = 0.5 * contracts;
+                const risk = x * y;
+                
+                // Display the calculated risk
+                riskValueSpan.textContent = `$${risk.toFixed(2)}`;
+                riskResultDiv.classList.remove('hidden');
+
+                // Calculate the number of contracts needed to hit the target risk
+                // risk = (points * 4) * (0.5 * contracts)
+                // targetRisk = 2 * points * contracts
+                // contracts = targetRisk / (2 * points)
+                const contractsFor250 = targetRisk / (2 * points);
+
+                contractsValueSpan.textContent = contractsFor250.toFixed(2);
+                contractsNeededDiv.classList.remove('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
